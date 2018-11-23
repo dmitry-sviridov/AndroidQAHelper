@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+out/
+.idea
+target/
+AndroidQAHelper.properties
+AndroidQAHelper.xml
+module_androidqahelper.xml
+AndroidQAHelper.iml
