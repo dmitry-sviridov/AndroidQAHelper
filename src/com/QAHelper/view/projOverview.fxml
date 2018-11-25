@@ -24,7 +24,7 @@
             </Label>
             <Label fx:id="deviceNameLabel" layoutX="142.0" layoutY="72.0" prefHeight="17.0" prefWidth="192.0" style="-fx-border-color: black;" />
             <Label fx:id="versionLabel" layoutX="142.0" layoutY="100.0" onMouseClicked="#copyToClipboard" prefHeight="17.0" prefWidth="192.0" style="-fx-border-color: black;" wrapText="true" />
-            <TextField fx:id="appPackageField" layoutX="142.0" layoutY="40.0" prefHeight="26.0" prefWidth="345.0" style="-fx-border-color: black;" text="com.melscience.melchemistryvr" />
+            <TextField fx:id="appPackageField" layoutX="142.0" layoutY="40.0" onInputMethodTextChanged="#onPkgChanged" onKeyPressed="#onPkgChanged" onKeyReleased="#onPkgChanged" onKeyTyped="#onPkgChanged" prefHeight="26.0" prefWidth="345.0" style="-fx-border-color: black;" text="com.melscience.melchemistry" />
             <Label layoutX="7.0" layoutY="101.0" prefHeight="17.0" prefWidth="126.0" text="current app ver.code:">
                <font>
                   <Font size="12.0" />
@@ -36,7 +36,7 @@
              </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="uninstallRBtn" layoutX="7.0" layoutY="135.0" mnemonicParsing="false" selected="true" text="uninstall apk" toggleGroup="$rbgroup" />
-            <RadioButton fx:id="installObbApkBtn" layoutX="7.0" layoutY="184.0" mnemonicParsing="false" text="install obb+apk" toggleGroup="$rbgroup" />
+            <RadioButton fx:id="installObbApkBtn" layoutX="7.0" layoutY="184.0" mnemonicParsing="false" text="install obb" toggleGroup="$rbgroup" />
             <RadioButton fx:id="removeDataRBtn" layoutX="129.0" layoutY="135.0" mnemonicParsing="false" text="delete cash and data" toggleGroup="$rbgroup" />
             <RadioButton fx:id="reinstallRBtn" layoutX="129.0" layoutY="160.0" mnemonicParsing="false" text="reinstall apk" toggleGroup="$rbgroup" />
             <Button fx:id="RunBtn" layoutX="345.0" layoutY="124.0" mnemonicParsing="false" onMouseClicked="#runAction" prefHeight="47.0" prefWidth="141.0" text="Run" />

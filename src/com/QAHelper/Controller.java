@@ -3,10 +3,16 @@ package com.QAHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -15,22 +21,25 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
+
+
 public class Controller {
 
     private ObservableList<String> detectedDevices;
-    private String versionCode;
+
     private String sdeviceID;
     private String pathToApk;
     private String pathToObb;
     private String obbName;
+    private String pkg;
 
     boolean isAll = true;
+    boolean reinstall = false;
 
     AdbOperations ops = new AdbOperations();
 
     final Clipboard clipboard = Clipboard.getSystemClipboard();
     final ClipboardContent content = new ClipboardContent();
-
 
     @FXML
     private ListView<String> deviceList;
@@ -80,28 +89,35 @@ public class Controller {
         }
         detectedDevices = null;
         deviceNameLabel.setText("");
+        pkg = appPackageField.getText();
         getDevices();
         if (detectedDevices.size() != 0) sdeviceID = detectedDevices.get(0);
         isAll = all_devices.isSelected();
+
+        // Get changes in radiobutton group
+        rbgroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                reinstall = reinstallRBtn.isSelected();
+            }
+        });
     }
 
+    // Is_All checkbox monitoring
     @FXML
     void changeIsAll() {
         isAll = all_devices.isSelected();
     }
 
-    void getVersionCodeApk() {
-        versionCode = null;
-        versionLabel.setText("");
-        try {
-            versionCode = ops.getApkVersion(appPackageField.getText(), deviceList.getSelectionModel().getSelectedItem());
-            versionLabel.setText(versionCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    // App-package field monitoring
+    @FXML
+    void onPkgChanged() {
+        pkg = appPackageField.getText();
+        System.out.println(pkg);
     }
 
-
+    // Updating info by clicking on device in list
     @FXML
     void updateSelectedDeviceInfo() {
         sdeviceID = null;
@@ -112,7 +128,18 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        getVersionCodeApk();
+        versionLabel.setText("");
+        runUpdateDeviceInfoTask();
+    }
+
+    void runUpdateDeviceInfoTask() {
+        UpdateDeviceInfoTask task = new UpdateDeviceInfoTask(sdeviceID, pkg);
+        task.setOnSucceeded(event -> {
+            versionLabel.setText(task.getValue());
+        });
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
     }
 
     @FXML
@@ -120,66 +147,39 @@ public class Controller {
         getDevices();
     }
 
-
     @FXML
     private void runAction() {
-
-        Task<Void> task = new Task<Void>() {
-            @Override
-            public Void call() {
-                uiAction();
-                return null;
-            }
-        };
-
-        task.setOnSucceeded(e -> {
-            System.out.println(sdeviceID);
-            updateSelectedDeviceInfo();
-        });
-
-        new Thread(task).start();
-    }
-
-    private void uiAction() {
         if (detectedDevices.size() != 0) {
-            if (uninstallRBtn.isSelected()) {
-                if (appPackageField.getText().length() > 1) {
-                    ops.uninstallApk(detectedDevices, appPackageField.getText(), sdeviceID, isAll);
-                } else {
-                    errorAlert("Package name is empty!");
-                }
-            }
-            if (installRBtn.isSelected()) {
-                    if (pathToApk != null) {
-                        ops.installApk(detectedDevices, pathToApk, sdeviceID, isAll);
-                    }
-                    else errorAlert("Choose apk file for install!");
-            }
-            if (installObbApkBtn.isSelected()) {
-                        if (pathToApk != null && pathToObb != null) {
-                            ops.installObb(detectedDevices, appPackageField.getText(), pathToObb, obbName);
-                        } else {
-                            errorAlert("Choose apk/obb file for install!");
-                        }
-            }
-            if (reinstallRBtn.isSelected()) {
+            if (rbgroup.getSelectedToggle() == installRBtn || rbgroup.getSelectedToggle() == reinstallRBtn) {
                 if (pathToApk != null) {
-                    ops.reinstallApk(detectedDevices, pathToApk, sdeviceID, isAll);
-                }
-                else errorAlert("Choose apk file for install!");
+                    installApk(detectedDevices, pathToApk, sdeviceID, isAll);
+                } else
+                    errorAlert("Incorrect path to apk");
             }
-            if (removeDataRBtn.isSelected()) {
-                if (appPackageField.getText().length() > 1) {
-                    ops.clearApkData(detectedDevices, appPackageField.getText(), sdeviceID, isAll);
-                } else {
-                    errorAlert("Package name is empty!");
-                }
+            if (rbgroup.getSelectedToggle() == uninstallRBtn) {
+                if (pkg.length() > 3) {
+                    uninstallApk(detectedDevices, pkg, sdeviceID, isAll);
+                } else
+                    errorAlert("Enter correct bundleID");
             }
-        } else {
-            errorAlert("Device list is empty!");
-        }
+            if (rbgroup.getSelectedToggle() == removeDataRBtn) {
+                if (pkg.length() > 3) {
+                    clearApkData(detectedDevices, pkg, sdeviceID, isAll);
+                } else
+                    errorAlert("Enter correct bundleID");
+            }
+            if (rbgroup.getSelectedToggle() == installObbApkBtn) {
+                if (pathToObb != null || pkg.length() > 3) {
+                    installObb(detectedDevices, pkg, sdeviceID, pathToObb, obbName);
+                } else
+                    errorAlert("Enter correct bundleID and path to Obb file");
+            }
+
+        } else errorAlert("Device list is empty");
     }
 
+
+    // File-opening dialog by clicking on text-area 'path to apk'
     @FXML
     void openApkFile() {
         FileChooser fileChooser = new FileChooser();
@@ -209,6 +209,7 @@ public class Controller {
         }
     }
 
+    // Scan adb-devices
     private void getDevices() {
         try {
             detectedDevices = FXCollections.observableArrayList(ops.getDeviceList());
@@ -216,6 +217,91 @@ public class Controller {
             e.printStackTrace();
         }
         deviceList.setItems(detectedDevices);
+    }
+
+
+
+    void uninstallApk(List<String> deviceIdList, String pkgName, String sdeviceId, boolean isAll) {
+        if (isAll) {
+            for (String device : deviceIdList) {
+                uninstall(device, pkgName);
+            }
+        } else {
+            uninstall(sdeviceId, pkgName);
+        }
+    }
+
+    private void uninstall(String deviceId, String pkg) {
+        RemoveTask task = new RemoveTask(deviceId, pkg);
+        task.setOnSucceeded((event -> {
+            runUpdateDeviceInfoTask();
+        }));
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
+    }
+
+    void clearApkData(List<String> deviceIdList, String pkgName, String sdeviceId, boolean isAll) {
+        if (isAll) {
+            for (String device : deviceIdList) {
+                clearData(device, pkgName);
+            }
+        } else {
+            clearData(sdeviceId, pkgName);
+        }
+    }
+
+    private void clearData(String deviceID, String pkg) {
+        ClearDataTask task = new ClearDataTask(deviceID, pkg);
+        task.setOnSucceeded(event -> {
+            System.out.println("Clear data on " + deviceID +" Success");
+        });
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
+    }
+
+    void installApk(List<String> deviceIdList, String pathToApk, String sdeviceId, boolean isAll) {
+        if (isAll) {
+            for (String device: deviceIdList) {
+                install(device, pathToApk);
+            }
+        } else {
+            install(sdeviceId, pathToApk);
+        }
+    }
+
+    private void install(String deviceId, String pathToApk) {
+        InstallationTask task = new InstallationTask(deviceId, pathToApk, reinstall);
+        task.setOnSucceeded(event -> {
+            if (deviceId.equals(sdeviceID)) {
+                runUpdateDeviceInfoTask();
+            }
+        });
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
+    }
+
+
+    void installObb(List<String> deviceIdList, String appPackageName, String sdeviceID, String pathToObb, String obbName) {
+        if (isAll) {
+            for (String device : deviceIdList) {
+                installObbfile(device, appPackageName, pathToObb, obbName);
+            }
+        } else
+            installObbfile(sdeviceID, appPackageName, pathToObb, obbName);
+
+    }
+
+    private void installObbfile(String deviceId, String appPackageName, String pathToObb, String obbName) {
+        InstallObbTask task = new InstallObbTask(deviceId, appPackageName, pathToObb, obbName);
+        task.setOnSucceeded(event -> {
+            System.out.println("Install obb" + deviceId +" Success");
+        });
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
     }
 
     /**
@@ -238,4 +324,12 @@ public class Controller {
         alert.setContentText(text);
         alert.showAndWait();
     }
+
+    static void infoAlert(String text) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Done");
+        alert.setContentText(text);
+        alert.showAndWait();
+    }
+
 }

@@ -5,12 +5,12 @@ import javafx.concurrent.Task;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class UpdateDeviceInfo extends Task<String> {
+public class UpdateDeviceInfoTask extends Task<String> {
 
     private final String sdeviceId;
     private final String pkg;
 
-    public UpdateDeviceInfo(String sdeviceId, String pkg) {
+    public UpdateDeviceInfoTask(String sdeviceId, String pkg) {
         this.sdeviceId = sdeviceId;
         this.pkg = pkg;
     }
