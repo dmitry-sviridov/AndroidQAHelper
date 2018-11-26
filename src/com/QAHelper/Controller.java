@@ -223,9 +223,7 @@ public class Controller {
 
     void uninstallApk(List<String> deviceIdList, String pkgName, String sdeviceId, boolean isAll) {
         if (isAll) {
-            for (String device : deviceIdList) {
-                uninstall(device, pkgName);
-            }
+            deviceIdList.forEach(device -> uninstall(device, pkgName));
         } else {
             uninstall(sdeviceId, pkgName);
         }
@@ -243,9 +241,7 @@ public class Controller {
 
     void clearApkData(List<String> deviceIdList, String pkgName, String sdeviceId, boolean isAll) {
         if (isAll) {
-            for (String device : deviceIdList) {
-                clearData(device, pkgName);
-            }
+            deviceIdList.forEach(device -> clearData(device, pkgName));
         } else {
             clearData(sdeviceId, pkgName);
         }
@@ -263,9 +259,7 @@ public class Controller {
 
     void installApk(List<String> deviceIdList, String pathToApk, String sdeviceId, boolean isAll) {
         if (isAll) {
-            for (String device: deviceIdList) {
-                install(device, pathToApk);
-            }
+            deviceIdList.forEach(device -> install(device, pathToApk));
         } else {
             install(sdeviceId, pathToApk);
         }
@@ -286,9 +280,7 @@ public class Controller {
 
     void installObb(List<String> deviceIdList, String appPackageName, String sdeviceID, String pathToObb, String obbName) {
         if (isAll) {
-            for (String device : deviceIdList) {
-                installObbfile(device, appPackageName, pathToObb, obbName);
-            }
+            deviceIdList.forEach(device -> installObbfile(device, appPackageName, pathToObb, obbName));
         } else
             installObbfile(sdeviceID, appPackageName, pathToObb, obbName);
 
