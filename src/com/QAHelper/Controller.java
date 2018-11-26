@@ -317,9 +317,9 @@ public class Controller {
         alert.showAndWait();
     }
 
-    static void infoAlert(String text) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Done");
+    static void warningAlert(String text) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Hm...");
         alert.setContentText(text);
         alert.showAndWait();
     }

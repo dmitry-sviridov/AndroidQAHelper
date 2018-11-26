@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.QAHelper.Controller.warningAlert;
+
 public class AdbOperations {
 
     public List<String> getDeviceList() throws IOException {
@@ -18,7 +20,7 @@ public class AdbOperations {
                 deviceList.add(line.split("\\t")[0]);
             }
         }
-        if (deviceList.size() == 0) deviceList.add("Not any connected devices");
+        if (deviceList.size() == 0) warningAlert("Not any connected devices/simulators");
         return deviceList;
     }
 
