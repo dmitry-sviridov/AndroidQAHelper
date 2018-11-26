@@ -48,6 +48,9 @@ public class Controller {
     private Label deviceNameLabel;
 
     @FXML
+    private Label androidVersionLabel;  // TODO: show android version | adb shell getprop ro.build.version.release |
+
+    @FXML
     private Label versionLabel;
 
     @FXML
@@ -73,6 +76,12 @@ public class Controller {
 
     @FXML
     private RadioButton removeDataRBtn;
+
+    @FXML
+    private Button launchBtn; // TODO: launch apk | adb shell monkey -p "${pkg}" -c android.intent.category.LAUNCHER 1 |
+
+    @FXML
+    private Button runMonkeyBtn; //TODO: launch monkey test with | adb shell monkey -p pkg --throttle 200 -v --pct-syskeys 0 10000 |
 
     @FXML
     private CheckBox all_devices;
@@ -103,21 +112,21 @@ public class Controller {
         });
     }
 
-    // Is_All checkbox monitoring
+    /** Is_All checkbox monitoring **/
     @FXML
     void changeIsAll() {
         isAll = all_devices.isSelected();
     }
 
 
-    // App-package field monitoring
+    /** App-package field monitoring **/
     @FXML
     void onPkgChanged() {
         pkg = appPackageField.getText();
         System.out.println(pkg);
     }
 
-    // Updating info by clicking on device in list
+    /** Updating info by clicking on device in list **/
     @FXML
     void updateSelectedDeviceInfo() {
         sdeviceID = null;
@@ -132,6 +141,7 @@ public class Controller {
         runUpdateDeviceInfoTask();
     }
 
+    /** task method **/
     void runUpdateDeviceInfoTask() {
         UpdateDeviceInfoTask task = new UpdateDeviceInfoTask(sdeviceID, pkg);
         task.setOnSucceeded(event -> {
@@ -147,6 +157,7 @@ public class Controller {
         getDevices();
     }
 
+    /** on 'Run task' pressed **/
     @FXML
     private void runAction() {
         if (detectedDevices.size() != 0) {
@@ -179,7 +190,7 @@ public class Controller {
     }
 
 
-    // File-opening dialog by clicking on text-area 'path to apk'
+    /** File-opening dialog by clicking on text-area 'path to apk' **/
     @FXML
     void openApkFile() {
         FileChooser fileChooser = new FileChooser();
@@ -209,7 +220,7 @@ public class Controller {
         }
     }
 
-    // Scan adb-devices
+    /** Scan adb-devices **/
     private void getDevices() {
         try {
             detectedDevices = FXCollections.observableArrayList(ops.getDeviceList());
@@ -221,7 +232,7 @@ public class Controller {
 
 
 
-    void uninstallApk(List<String> deviceIdList, String pkgName, String sdeviceId, boolean isAll) {
+    private void uninstallApk(List<String> deviceIdList, String pkgName, String sdeviceId, boolean isAll) {
         if (isAll) {
             deviceIdList.forEach(device -> uninstall(device, pkgName));
         } else {
@@ -230,7 +241,8 @@ public class Controller {
     }
 
     private void uninstall(String deviceId, String pkg) {
-        RemoveTask task = new RemoveTask(deviceId, pkg);
+        RemoveTask task;
+        task = new RemoveTask(deviceId, pkg);
         task.setOnSucceeded((event -> {
             runUpdateDeviceInfoTask();
         }));
