@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -17,15 +18,20 @@
       <ListView fx:id="deviceList" layoutX="491.0" layoutY="4.0" onMouseClicked="#updateSelectedDeviceInfo" prefHeight="243.0" prefWidth="205.0" AnchorPane.leftAnchor="491.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0" />
       <Pane prefHeight="250.0" prefWidth="491.0" style="-fx-background-color: lightgrey;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="209.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="7.0" layoutY="75.0" prefHeight="17.0" prefWidth="101.0" text="selected device:">
+            <Label layoutX="364.0" layoutY="73.0" text="Android:">
                <font>
                   <Font size="12.0" />
                </font>
             </Label>
-            <Label fx:id="deviceNameLabel" layoutX="142.0" layoutY="72.0" prefHeight="17.0" prefWidth="192.0" style="-fx-border-color: black;" />
-            <Label fx:id="versionLabel" layoutX="142.0" layoutY="100.0" onMouseClicked="#copyToClipboard" prefHeight="17.0" prefWidth="192.0" style="-fx-border-color: black;" wrapText="true" />
-            <TextField fx:id="appPackageField" layoutX="142.0" layoutY="40.0" prefHeight="26.0" prefWidth="345.0" style="-fx-border-color: black;" text="com.melscience.melchemistryvr" />
-            <Label layoutX="7.0" layoutY="101.0" prefHeight="17.0" prefWidth="126.0" text="current app ver.code:">
+            <Label layoutX="7.0" layoutY="73.0" prefHeight="17.0" prefWidth="101.0" text="selected device:">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="deviceNameLabel" layoutX="142.0" layoutY="72.0" prefHeight="19.0" prefWidth="215.0" style="-fx-border-color: black;" />
+            <Label fx:id="versionLabel" layoutX="142.0" layoutY="98.0" onMouseClicked="#copyToClipboard" prefHeight="17.0" prefWidth="192.0" style="-fx-border-color: black;" wrapText="true" />
+            <TextField fx:id="appPackageField" layoutX="142.0" layoutY="40.0" onInputMethodTextChanged="#onPkgChanged" onKeyPressed="#onPkgChanged" onKeyReleased="#onPkgChanged" onKeyTyped="#onPkgChanged" prefHeight="26.0" prefWidth="345.0" style="-fx-border-color: black;" text="com.melscience.melchemistry" />
+            <Label layoutX="7.0" layoutY="99.0" prefHeight="17.0" prefWidth="126.0" text="current app ver.code:">
                <font>
                   <Font size="12.0" />
                </font>
@@ -36,11 +42,11 @@
              </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="uninstallRBtn" layoutX="7.0" layoutY="135.0" mnemonicParsing="false" selected="true" text="uninstall apk" toggleGroup="$rbgroup" />
-            <RadioButton fx:id="installObbApkBtn" layoutX="7.0" layoutY="184.0" mnemonicParsing="false" text="install obb+apk" toggleGroup="$rbgroup" />
+            <RadioButton fx:id="installObbApkBtn" layoutX="7.0" layoutY="184.0" mnemonicParsing="false" text="install obb" toggleGroup="$rbgroup" />
             <RadioButton fx:id="removeDataRBtn" layoutX="129.0" layoutY="135.0" mnemonicParsing="false" text="delete cash and data" toggleGroup="$rbgroup" />
             <RadioButton fx:id="reinstallRBtn" layoutX="129.0" layoutY="160.0" mnemonicParsing="false" text="reinstall apk" toggleGroup="$rbgroup" />
-            <Button fx:id="RunBtn" layoutX="345.0" layoutY="124.0" mnemonicParsing="false" onMouseClicked="#runAction" prefHeight="47.0" prefWidth="141.0" text="Run" />
-            <Button fx:id="scanDeviceBtn" alignment="CENTER" layoutX="346.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#onScanDeviceBtnClick" prefHeight="47.0" prefWidth="141.0" style="-fx-border-radius: 3; -fx-focus-traversable: true;" text="Refresh device list" textAlignment="CENTER" wrapText="true" />
+            <Button fx:id="RunBtn" layoutX="345.0" layoutY="144.0" mnemonicParsing="false" onMouseClicked="#runAction" prefHeight="27.0" prefWidth="141.0" text="Run task" />
+            <Button fx:id="scanDeviceBtn" alignment="CENTER" layoutX="345.0" layoutY="98.0" mnemonicParsing="false" onMouseClicked="#onScanDeviceBtnClick" prefHeight="45.0" prefWidth="141.0" style="-fx-border-radius: 3; -fx-focus-traversable: true;" text="Refresh device list" textAlignment="CENTER" wrapText="true" />
             <Label layoutX="7.0" layoutY="46.0" prefHeight="17.0" prefWidth="126.0" text="selected package:">
                <font>
                   <Font size="12.0" />
@@ -48,8 +54,12 @@
             </Label>
             <TextField fx:id="appPackagePath" editable="false" layoutX="248.0" layoutY="4.0" onMouseClicked="#openApkFile" prefHeight="29.0" prefWidth="239.0" style="-fx-border-color: black;" text="path to apk" />
             <TextField fx:id="appObbPath" editable="false" layoutX="6.0" layoutY="4.0" onMouseClicked="#openObbFile" prefHeight="26.0" prefWidth="239.0" style="-fx-border-color: black;" text="path to obb" />
-            <CheckBox id="all_devices" fx:id="all_devices" layoutX="345.0" layoutY="175.0" mnemonicParsing="false" onAction="#changeIsAll" prefHeight="18.0" prefWidth="101.0" selected="true" text="all devices" />
-            <ProgressIndicator layoutX="205.0" layoutY="161.0" progress="0.0" visible="false" />
+            <CheckBox id="all_devices" fx:id="all_devices" layoutX="201.0" layoutY="217.0" mnemonicParsing="false" onAction="#changeIsAll" prefHeight="18.0" prefWidth="126.0" selected="true" text="for all devices" />
+            <Button fx:id="launchBtn" layoutX="345.0" layoutY="185.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="141.0" text="Launch apk" />
+            <Button fx:id="runMonkeyBtn" layoutX="345.0" layoutY="213.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="141.0" text="Start monkey test" />
+            <Label fx:id="androidVersionLabel" layoutX="419.0" layoutY="72.0" prefHeight="19.0" prefWidth="68.0" style="-fx-border-color: black;" textAlignment="CENTER" />
+            <Separator layoutX="344.0" layoutY="177.0" prefHeight="3.0" prefWidth="141.0" />
+            <ProgressIndicator layoutX="133.0" layoutY="189.0" prefWidth="55.0" progress="0.0" visible="false" />
 
          </children>
       </Pane>

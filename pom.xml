@@ -6,7 +6,7 @@
 
     <groupId>com.QAHelper</groupId>
     <artifactId>AndroidQAHelper</artifactId>
-    <version>1.0.0-beta</version>
+    <version>1.0</version>
     <build>
         <plugins>
             <plugin>
