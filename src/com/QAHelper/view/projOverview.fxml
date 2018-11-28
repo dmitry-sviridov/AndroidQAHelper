@@ -30,7 +30,7 @@
             </Label>
             <Label fx:id="deviceNameLabel" layoutX="142.0" layoutY="72.0" prefHeight="19.0" prefWidth="215.0" style="-fx-border-color: black;" />
             <Label fx:id="versionLabel" layoutX="142.0" layoutY="98.0" onMouseClicked="#copyToClipboard" prefHeight="17.0" prefWidth="192.0" style="-fx-border-color: black;" wrapText="true" />
-            <TextField fx:id="appPackageField" layoutX="142.0" layoutY="40.0" onInputMethodTextChanged="#onPkgChanged" onKeyPressed="#onPkgChanged" onKeyReleased="#onPkgChanged" onKeyTyped="#onPkgChanged" prefHeight="26.0" prefWidth="345.0" style="-fx-border-color: black;" text="com.melscience.melchemistry" />
+            <TextField fx:id="appPackageField" layoutX="142.0" layoutY="40.0" onInputMethodTextChanged="#onPkgChanged" onKeyPressed="#onPkgChanged" onKeyReleased="#onPkgChanged" onKeyTyped="#onPkgChanged" prefHeight="26.0" prefWidth="345.0" style="-fx-border-color: black;" text="com.company.yourpackagename" />
             <Label layoutX="7.0" layoutY="99.0" prefHeight="17.0" prefWidth="126.0" text="current app ver.code:">
                <font>
                   <Font size="12.0" />
