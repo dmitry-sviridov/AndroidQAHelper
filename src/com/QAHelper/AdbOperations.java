@@ -24,6 +24,14 @@ public class AdbOperations {
         return deviceList;
     }
 
+    public String getAndroidVersion(String deviceID) throws IOException {
+        String cmd = String.format("adb -s %s shell getprop ro.build.version.release", deviceID);
+        Process getVersion = Runtime.getRuntime().exec(cmd);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getVersion.getInputStream()));
+        String android = bufferedReader.readLine();
+        return android;
+    }
+
     public String getApkVersion(String pkg, String deviceID) throws IOException {
         String cmd = String.format("adb -s %s shell dumpsys package %s", deviceID, pkg);
         Process getVersion = Runtime.getRuntime().exec(cmd);

@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
 import javafx.scene.input.Clipboard;
@@ -98,6 +99,8 @@ public class Controller {
         }
         detectedDevices = null;
         deviceNameLabel.setText("");
+        androidVersionLabel.setText("");
+        androidVersionLabel.setAlignment(Pos.CENTER);
         pkg = appPackageField.getText();
         getDevices();
         if (detectedDevices.size() != 0) sdeviceID = detectedDevices.get(0);
@@ -131,9 +134,11 @@ public class Controller {
     void updateSelectedDeviceInfo() {
         sdeviceID = null;
         deviceNameLabel.setText("");
+        androidVersionLabel.setText("");
         sdeviceID = deviceList.getSelectionModel().getSelectedItem();
         try {
             deviceNameLabel.setText(ops.getDeviceModel(sdeviceID));
+            androidVersionLabel.setText(ops.getAndroidVersion(sdeviceID));
         } catch (IOException e) {
             e.printStackTrace();
         }
