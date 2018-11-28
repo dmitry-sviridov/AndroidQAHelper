@@ -102,17 +102,14 @@ public class Controller {
         androidVersionLabel.setText("");
         androidVersionLabel.setAlignment(Pos.CENTER);
         pkg = appPackageField.getText();
+
         getDevices();
+
         if (detectedDevices.size() != 0) sdeviceID = detectedDevices.get(0);
         isAll = all_devices.isSelected();
 
         // Get changes in radiobutton group
-        rbgroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                reinstall = reinstallRBtn.isSelected();
-            }
-        });
+        rbgroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> reinstall = reinstallRBtn.isSelected());
     }
 
     /** Is_All checkbox monitoring **/
@@ -160,6 +157,16 @@ public class Controller {
     @FXML
     void onScanDeviceBtnClick() {
         getDevices();
+    }
+
+    @FXML
+    private void launchApkPressed() {
+        launchApk(detectedDevices, pkg, sdeviceID);
+    }
+
+    @FXML
+    private void startMonkeyPressed() {
+        startMonkeySession(detectedDevices, pkg, sdeviceID);
     }
 
     /** on 'Run task' pressed **/
@@ -307,6 +314,40 @@ public class Controller {
         InstallObbTask task = new InstallObbTask(deviceId, appPackageName, pathToObb, obbName);
         task.setOnSucceeded(event -> {
             System.out.println("Install obb" + deviceId +" Success");
+        });
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
+    }
+
+    void launchApk(List<String> deviceIdList, String appPackageName, String sdeviceID) {
+        if (isAll) {
+            deviceIdList.forEach(device -> launch(device, appPackageName));
+        } else
+            launch(sdeviceID, appPackageName);
+    }
+
+    private void launch(String deviceID, String pkg) {
+        LaunchApkTask task = new LaunchApkTask(deviceID, pkg);
+        task.setOnSucceeded(event -> {
+            System.out.println(deviceID + " launched");
+        });
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(task);
+        executorService.shutdown();
+    }
+
+    void startMonkeySession(List<String> deviceIdList, String appPackageName, String sdeviceID) {
+        if (isAll) {
+            deviceIdList.forEach(device -> monkey(device, appPackageName));
+        } else
+            monkey(sdeviceID, appPackageName);
+    }
+
+    private void monkey(String deviceId, String pkg) {
+        StartMonkeyTask task = new StartMonkeyTask(deviceId, pkg);
+        task.setOnSucceeded(event -> {
+            System.out.println(deviceId + " monkey started for 10 000 events");
         });
         ExecutorService executorService = Executors.newCachedThreadPool();
         executorService.execute(task);

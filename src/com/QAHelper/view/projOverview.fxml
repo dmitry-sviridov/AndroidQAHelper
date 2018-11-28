@@ -55,8 +55,8 @@
             <TextField fx:id="appPackagePath" editable="false" layoutX="248.0" layoutY="4.0" onMouseClicked="#openApkFile" prefHeight="29.0" prefWidth="239.0" style="-fx-border-color: black;" text="path to apk" />
             <TextField fx:id="appObbPath" editable="false" layoutX="6.0" layoutY="4.0" onMouseClicked="#openObbFile" prefHeight="26.0" prefWidth="239.0" style="-fx-border-color: black;" text="path to obb" />
             <CheckBox id="all_devices" fx:id="all_devices" layoutX="201.0" layoutY="217.0" mnemonicParsing="false" onAction="#changeIsAll" prefHeight="18.0" prefWidth="126.0" selected="true" text="for all devices" />
-            <Button fx:id="launchBtn" layoutX="345.0" layoutY="185.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="141.0" text="Launch apk" />
-            <Button fx:id="runMonkeyBtn" layoutX="345.0" layoutY="213.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="141.0" text="Start monkey test" />
+            <Button fx:id="launchBtn" layoutX="345.0" layoutY="185.0" mnemonicParsing="false" onAction="#launchApkPressed" prefHeight="27.0" prefWidth="141.0" text="Launch apk" />
+            <Button fx:id="runMonkeyBtn" layoutX="345.0" layoutY="213.0" mnemonicParsing="false" onAction="#startMonkeyPressed" prefHeight="27.0" prefWidth="141.0" text="Start monkey test" />
             <Label fx:id="androidVersionLabel" layoutX="419.0" layoutY="72.0" prefHeight="19.0" prefWidth="68.0" style="-fx-border-color: black;" textAlignment="CENTER" />
             <Separator layoutX="344.0" layoutY="177.0" prefHeight="3.0" prefWidth="141.0" />
             <ProgressIndicator layoutX="133.0" layoutY="189.0" prefWidth="55.0" progress="0.0" visible="false" />
