@@ -9,6 +9,7 @@ Dmitrijkocur@gmail.com
 
 ### TODO: 
 simplify architecture
+
 ### Before usage: 
 install adb on your PC and update PATH enviroment variable.
 
@@ -24,5 +25,4 @@ Build project or use AndroidQAHelper.jar from repo. In this case, open cmd from 
 
 You can run choosen job for one (selected in list) or all connected devices. Click on 'all devices' checkbox for setup job.
 
-### Known issues:
-After completing, UI doesn't refresh state. To refresh state click on device.
+
