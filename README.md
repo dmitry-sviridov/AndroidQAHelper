@@ -2,6 +2,12 @@
 Small utility for install/uninstall/clearing cache and data from several connected devices. 
 Currentrly in development.
 
+## Features:  
+- install apk on multiple devices
+- uninstall apk by packagename from multiple devices
+- clean cache and data by packagename from multiple devices
+- run app on devices
+- run monkey test on devices
 
 ### Author: 
 Dmitrij Kotsur  
