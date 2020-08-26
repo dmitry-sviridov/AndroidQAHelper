@@ -12,7 +12,7 @@ Currentrly in development.
 ![alt text](https://user-images.githubusercontent.com/36419028/49168221-19274900-f348-11e8-8d69-f5cbe71cfab3.png)
 
 ### Author: 
-Dmitrij Kotsur  
+Dmitry Sviridov 
 Dmitrijkocur@gmail.com
 
 ### TODO: 
